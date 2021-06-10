@@ -203,29 +203,6 @@ or passing these values as `--set` overrides during installation.
 
 The new release should now re-attach your previously released PV with its content.
 
-## Migrating from coreos/prometheus-operator chart
-
-The multiple charts have been combined into a single chart that installs prometheus operator, prometheus, alertmanager, grafana as well as the multitude of exporters necessary to monitor a cluster.
-
-There is no simple and direct migration path between the charts as the changes are extensive and intended to make the chart easier to support.
-
-The capabilities of the old chart are all available in the new chart, including the ability to run multiple prometheus instances on a single cluster - you will need to disable the parts of the chart you do not wish to deploy.
-
-You can check out the tickets for this change [here](https://github.com/prometheus-operator/prometheus-operator/issues/592) and [here](https://github.com/helm/charts/pull/6765).
-
-### High-level overview of Changes
-
-#### Added dependencies
-
-The chart has added 3 [dependencies](#dependencies).
-
-- Node-Exporter, Kube-State-Metrics: These components are loaded as dependencies into the chart, and are relatively simple components
-- Grafana: The Grafana chart is more feature-rich than this chart - it contains a sidecar that is able to load data sources and dashboards from configmaps deployed into the same cluster. For more information check out the [documentation for the chart](https://github.com/grafana/helm-charts/blob/main/charts/grafana/README.md)
-
-#### Kubelet Service
-
-Because the kubelet service has a new name in the chart, make sure to clean up the old kubelet service in the `kube-system` namespace to prevent counting container metrics twice.
-
 #### Persistent Volumes
 
 If you would like to keep the data of the current persistent volumes, it should be possible to attach existing volumes to new PVCs and PVs that are created using the conventions in the new chart. For example, in order to use an existing Azure disk for a helm release called `prometheus-migration` the following resources can be created:
